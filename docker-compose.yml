@@ -11,3 +11,18 @@ services:
       - '8000:8000'
     volumes:
       - .:/parking
+
+  mysql:
+    container_name: mysql-parking
+    image: mysql
+    restart: always
+    ports:
+        - "3306:3306"
+    environment:
+      - MYSQL_HOST=127.0.0.1
+      - MYSQL_DATABASE=parking_alot
+      - MYSQL_USER=parking
+      - MYSQL_PASSWORD=parking
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - ./mysql-parking:/var/lib/mysql
