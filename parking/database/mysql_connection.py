@@ -14,8 +14,8 @@ class MysqlConnection(DbConnection):
             self.conn = connection.MySQLConnection(
                 host="127.0.0.1",
                 database="parking_alot",
-                user="parking",
-                password="parking"
+                user="root",
+                password="password"
                 # user=os.getenv('MYSQL_USER'),
                 # password=os.getenv('MYSQL_PASSWORD'),
                 # host=os.getenv('MYSQL_HOST'),
