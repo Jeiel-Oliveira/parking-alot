@@ -1,11 +1,18 @@
 FROM python:3.9
 
-WORKDIR /code
+WORKDIR /parking
 
-COPY ./requirements.txt /code/requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-COPY ./app /code/app
+COPY . ./parking/
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-CMD ["fastapi", "run", "app/main.py", "--port", "8080"]
+COPY . /parking/
+
+EXPOSE 8000
+
+CMD ["uvicorn", "parking.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
