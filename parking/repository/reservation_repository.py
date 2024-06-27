@@ -44,7 +44,7 @@ class ReservationRepository:
     def delete_by_id(self, reservation_id: int):
         cursor = self.connection.cursor()
         cursor.execute(
-            f"DELETE FROM {self.table} WHERE reservation_id=" + str(reservation_id)
+            f"DELETE FROM {self.table} WHERE reservation_id= " + str(reservation_id)
         )
 
         self.connection.commit()

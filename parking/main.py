@@ -6,12 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Server is running"}
-
-
-@app.get("/health")
-def server_health():
-    return {"Server is health"}
+    return "Server is running"
 
 
 app.include_router(reservation_router)
