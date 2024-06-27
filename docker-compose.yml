@@ -11,15 +11,16 @@ services:
       - '8000:8000'
     volumes:
       - .:/parking
+    depends_on:
+      - mysql-parking 
 
-  mysql:
+  mysql-parking:
     container_name: mysql-parking
     image: mysql
     restart: always
     ports:
         - "3306:3306"
     environment:
-      - MYSQL_HOST=127.0.0.1
       - MYSQL_DATABASE=parking_alot
       - MYSQL_USER=parking
       - MYSQL_PASSWORD=parking

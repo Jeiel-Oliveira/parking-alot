@@ -1,21 +1,20 @@
-import os
 from parking.database.db_connection import DbConnection
-from mysql.connector import (connection)
+import mysql.connector
 
 
-class MysqlConnection(DbConnection):
-    conn: connection.MySQLConnection = None
+class MySqlConnection(DbConnection):
+    conn: mysql.connector.connect = None
 
     def __init__(self):
         super().__init__()
 
     def connect(self):
         if not self.conn:
-            self.conn = connection.MySQLConnection(
-                host="127.0.0.1",
+            self.conn = mysql.connector.connect(
+                host="mysql-parking",
                 database="parking_alot",
-                user="root",
-                password="password"
+                user="parking",
+                password="parking"
                 # user=os.getenv('MYSQL_USER'),
                 # password=os.getenv('MYSQL_PASSWORD'),
                 # host=os.getenv('MYSQL_HOST'),
