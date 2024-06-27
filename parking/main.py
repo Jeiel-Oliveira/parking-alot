@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from parking.controller.reservation_controller import reservation_router
+from parking.controller.reservation_controller import ReservationController
 
 app = FastAPI()
 
@@ -9,4 +9,7 @@ def read_root():
     return "Server is running"
 
 
-app.include_router(reservation_router)
+reservation_routes = ReservationController().get_router()
+
+
+app.include_router(reservation_routes)

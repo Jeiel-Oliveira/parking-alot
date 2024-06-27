@@ -1,11 +1,14 @@
-from mysql.connector import connection
+from mysql.connector import connection, MySQLConnection
 from parking.model.reservation import Reservation
 
 
 class ReservationRepository:
     table: str = "RESERVATIONS"
+    connection: MySQLConnection
 
-    connection: connection.MySQLConnection
+    def __init__(self, connection):
+        self.connection = connection
+
 
     def create_table(self):
         """
@@ -18,8 +21,6 @@ class ReservationRepository:
         );
         """
 
-    def __init__(self, connection):
-        self.connection = connection
 
     def create(self, reservation: Reservation):
         cursor = self.connection.cursor()
@@ -50,7 +51,7 @@ class ReservationRepository:
         self.connection.commit()
         cursor.close()
 
-        return cursor.rowcount
+        return cursor.rowcount > 0
 
     def find_by_id(self, reservation_id: str):
         cursor = self.connection.cursor()

@@ -1,6 +1,11 @@
 from parking.database.db_connection import DbConnection
 import mysql.connector
 
+def get_database_connection():
+    connection = MySqlConnection()
+    connection.connect()
+    return connection.conn
+
 
 class MySqlConnection(DbConnection):
     conn: mysql.connector.connect = None
@@ -15,10 +20,6 @@ class MySqlConnection(DbConnection):
                 database="parking_alot",
                 user="parking",
                 password="parking"
-                # user=os.getenv('MYSQL_USER'),
-                # password=os.getenv('MYSQL_PASSWORD'),
-                # host=os.getenv('MYSQL_HOST'),
-                # database=os.getenv('MYSQL_DATABASE')
             )
 
     def disconnect(self):

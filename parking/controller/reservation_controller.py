@@ -1,57 +1,39 @@
 from fastapi import APIRouter
-from parking.repository.reservation_repository import ReservationRepository
-from parking.database.mysql_connection import MySqlConnection
 from parking.dto.reservationDto import ReservationDto
-from parking.model.reservation import Reservation
+from parking.service.reservation_service import ReservationService
+from parking.repository.reservation_repository import ReservationRepository
+from fastapi import Depends
+from parking.database.mysql_connection import get_database_connection
 
-reservation_router = APIRouter(prefix="/parking")
+def get_reservation_service():
+    return ReservationService(ReservationRepository(get_database_connection()))
 
-sqlite_connection = MySqlConnection()
-sqlite_connection.connect()
+class ReservationController:
+    reservation_router = APIRouter(prefix="/parking")
 
-reservation_repository = ReservationRepository(sqlite_connection.conn)
+    def __init__(self) -> None:
+        pass
 
+    def get_router(self) -> APIRouter:
+        @self.reservation_router.get("/")
+        def find_all(reservation_service: ReservationService = Depends(get_reservation_service)):
+            return reservation_service.find_all()
 
-@reservation_router.get("/")
-def find():
-    return reservation_repository.find_all()
+        @self.reservation_router.post("/")
+        def create(reservationDto: ReservationDto, reservation_service: ReservationService = Depends(get_reservation_service)):
+            return reservation_service.create(reservationDto)
 
+        @self.reservation_router.get("/{reservation_id}")
+        def find_by_id(reservation_id: int, reservation_service: ReservationService = Depends(get_reservation_service)):
+            return reservation_service.find_by_id(reservation_id)
 
-@reservation_router.post("/")
-def create(reservationDto: ReservationDto):
-    reservation = Reservation(
-        start_time=reservationDto.start_time,
-        end_time=reservationDto.end_time,
-        status=reservationDto.status,
-        price=reservationDto.price,
-    )
+        @self.reservation_router.delete("/{reservation_id}")
+        def delete_by_id(reservation_id: int, reservation_service: ReservationService = Depends(get_reservation_service)):
+            reservation_service.delete(reservation_id)
+            return f"Deleted {reservation_id} successfully!"
 
-    reservation_repository.create(reservation)
-    return reservation
+        @self.reservation_router.put("/{reservation_id}")
+        def update_by_id(reservation_id: int, reservationDto: ReservationDto, reservation_service: ReservationService = Depends(get_reservation_service)):
+            return reservation_service.update(reservation_id, reservationDto)
 
-
-@reservation_router.get("/{reservation_id}")
-def find_by_id(reservation_id: int, q: str = None):
-    reservation = reservation_repository.find_by_id(reservation_id)
-    return reservation
-
-
-@reservation_router.delete("/{reservation_id}")
-def delete_by_id(reservation_id: int):
-    reservation_repository.delete_by_id(reservation_id)
-    return f"Deleted {reservation_id} successfully!"
-
-
-@reservation_router.put("/{reservation_id}")
-def update_by_id(reservation_id: int, reservationDto: ReservationDto):
-    reservation = Reservation(
-        reservation_id=reservation_id,
-        start_time=reservationDto.start_time,
-        end_time=reservationDto.end_time,
-        status=reservationDto.status,
-        price=reservationDto.price,
-    )
-
-    reservation_repository.update(reservation)
-
-    return reservation
+        return self.reservation_router
