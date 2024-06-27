@@ -10,9 +10,9 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - .:/parking
+      - .:/src
     depends_on:
-      - mysql-parking 
+      - mysql-parking
 
   mysql-parking:
     container_name: mysql-parking

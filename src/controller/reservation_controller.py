@@ -1,9 +1,8 @@
-from fastapi import APIRouter
-from parking.dto.reservationDto import ReservationDto
-from parking.service.reservation_service import ReservationService
-from parking.repository.reservation_repository import ReservationRepository
-from fastapi import Depends
-from parking.database.mysql_connection import get_database_connection
+from fastapi import APIRouter, Depends
+from src.dto.reservationDto import ReservationDto
+from src.service.reservation_service import ReservationService
+from src.repository.reservation_repository import ReservationRepository
+from src.database.mysql_connection import get_database_connection
 
 def get_reservation_service():
     return ReservationService(ReservationRepository(get_database_connection()))

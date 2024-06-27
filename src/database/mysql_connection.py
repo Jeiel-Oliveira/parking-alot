@@ -1,4 +1,4 @@
-from parking.database.db_connection import DbConnection
+from src.database.db_connection import DbConnection
 import mysql.connector
 
 def get_database_connection():

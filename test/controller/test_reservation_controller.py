@@ -20,7 +20,7 @@ correctPath = removeLastPath(correctPath)
 sys.path.append(correctPath)
 
 from fastapi.testclient import TestClient
-from parking.main import app
+from src.main import app
 
 # mock_session = MagicMock()
 

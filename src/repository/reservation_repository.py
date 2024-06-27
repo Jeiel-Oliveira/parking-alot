@@ -1,6 +1,7 @@
-from mysql.connector import connection, MySQLConnection
-from parking.model.reservation import Reservation
+from collections import namedtuple
 
+from mysql.connector import MySQLConnection
+from src.model.reservation import Reservation
 
 class ReservationRepository:
     table: str = "RESERVATIONS"
@@ -8,6 +9,9 @@ class ReservationRepository:
 
     def __init__(self, connection):
         self.connection = connection
+
+    def generate_reservation_factory(self, reservation_dict: dict[str, str]) -> Reservation:
+        return Reservation.from_dict_factory(reservation_dict)
 
 
     def create_table(self):
@@ -54,7 +58,7 @@ class ReservationRepository:
         return cursor.rowcount > 0
 
     def find_by_id(self, reservation_id: str):
-        cursor = self.connection.cursor()
+        cursor = self.connection.cursor(dictionary=True)
         cursor.execute(
             f"SELECT * FROM {self.table} WHERE reservation_id=" + str(reservation_id)
         )
@@ -62,7 +66,15 @@ class ReservationRepository:
         reservation = cursor.fetchone()
         cursor.close()
 
-        return reservation
+        return self.generate_reservation_factory(reservation)
+
+    def find_all(self):
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(f"SELECT * FROM {self.table}")
+        reservations = cursor.fetchall()
+        cursor.close()
+
+        return list(map(self.generate_reservation_factory, reservations))
 
     def update(self, reservation: Reservation):
         cursor = self.connection.cursor()
@@ -85,11 +97,3 @@ class ReservationRepository:
         )
         self.connection.commit()
         cursor.close()
-
-    def find_all(self):
-        cursor = self.connection.cursor()
-        cursor.execute(f"SELECT * FROM {self.table}")
-        reservations = cursor.fetchall()
-        cursor.close()
-
-        return reservations

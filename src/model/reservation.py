@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import namedtuple
 
 
 class Reservation:
@@ -21,3 +22,13 @@ class Reservation:
         self.end_time = end_time
         self.status = status
         self.price = price
+
+    @staticmethod
+    def from_dict_factory(reservation_dict: dict[str, str]):
+        return Reservation(
+            reservation_id = reservation_dict["reservation_id"],
+            start_time = reservation_dict["start_time"],
+            end_time = reservation_dict["end_time"],
+            status = reservation_dict["status"],
+            price = reservation_dict["price"]
+        )

@@ -1,6 +1,6 @@
-from parking.repository.reservation_repository import ReservationRepository
-from parking.dto.reservationDto import ReservationDto
-from parking.model.reservation import Reservation
+from src.repository.reservation_repository import ReservationRepository
+from src.dto.reservationDto import ReservationDto
+from src.model.reservation import Reservation
 
 
 class ReservationService:
