@@ -36,6 +36,12 @@ def find_by_id(reservation_id: int, q: str = None):
     return reservation
 
 
+@reservation_router.delete("/{reservation_id}")
+def delete_by_id(reservation_id: int):
+    reservation_repository.delete_by_id(reservation_id)
+    return f"Deleted {reservation_id} successfully!"
+
+
 @reservation_router.put("/{reservation_id}")
 def update_by_id(reservation_id: int, reservationDto: ReservationDto):
     reservation = Reservation(

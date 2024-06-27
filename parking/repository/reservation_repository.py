@@ -41,6 +41,17 @@ class ReservationRepository:
         self.connection.commit()
         cursor.close()
 
+    def delete_by_id(self, reservation_id: int):
+        cursor = self.connection.cursor()
+        cursor.execute(
+            f"DELETE FROM {self.table} WHERE reservation_id=" + str(reservation_id)
+        )
+
+        self.connection.commit()
+        cursor.close()
+
+        return cursor.rowcount
+
     def find_by_id(self, reservation_id: str):
         cursor = self.connection.cursor()
         cursor.execute(
@@ -48,6 +59,7 @@ class ReservationRepository:
         )
 
         reservation = cursor.fetchone()
+        cursor.close()
 
         return reservation
 
