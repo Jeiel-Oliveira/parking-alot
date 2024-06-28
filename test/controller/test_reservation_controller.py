@@ -41,4 +41,3 @@ class TestReservationController(TestCase):
         response = client.get("/", headers={"X-Token": "coneofsilence"})
         assert response.status_code == 200
         assert response.json() == "Server is running"
-

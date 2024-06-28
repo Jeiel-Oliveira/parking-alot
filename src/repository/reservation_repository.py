@@ -10,7 +10,7 @@ class ReservationRepository:
     def __init__(self, connection):
         self.connection = connection
 
-    def generate_reservation_factory(self, reservation_dict: dict[str, str]) -> Reservation:
+    def generate_reservation_factory(self, reservation_dict: dict) -> Reservation:
         return Reservation.from_dict_factory(reservation_dict)
 
 
