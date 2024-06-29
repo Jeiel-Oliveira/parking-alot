@@ -2,6 +2,10 @@ from src.repository.reservation_repository import ReservationRepository
 from src.dto.reservationDto import ReservationDto
 from src.model.reservation import Reservation
 
+from src.exceptions.reservation_notfound_exception import (
+    ReservationNotfoundException,
+)
+
 
 class ReservationService:
     reservation_repository: ReservationRepository
@@ -25,7 +29,13 @@ class ReservationService:
         return reservation
 
     def find_by_id(self, reservation_id: str):
-        reservation = self.reservation_repository.find_by_id(reservation_id)
+        reservation = self.reservation_repository.find_by_id(
+            reservation_id
+        )
+
+        if reservation is None:
+            raise ReservationNotfoundException(reservation_id)
+
         return reservation
 
     def delete(self, reservation_id: str) -> bool:

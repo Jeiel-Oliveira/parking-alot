@@ -1,7 +1,6 @@
-from collections import namedtuple
-
 from mysql.connector import MySQLConnection
 from src.model.reservation import Reservation
+
 
 class ReservationRepository:
     table: str = "RESERVATIONS"
@@ -10,9 +9,10 @@ class ReservationRepository:
     def __init__(self, connection):
         self.connection = connection
 
-    def generate_reservation_factory(self, reservation_dict: dict) -> Reservation:
+    def generate_reservation_factory(
+        self, reservation_dict: dict
+    ) -> Reservation:
         return Reservation.from_dict_factory(reservation_dict)
-
 
     def create_table(self):
         """
@@ -24,7 +24,6 @@ class ReservationRepository:
             price INT NOT NULL
         );
         """
-
 
     def create(self, reservation: Reservation):
         cursor = self.connection.cursor()
@@ -49,7 +48,8 @@ class ReservationRepository:
     def delete_by_id(self, reservation_id: int):
         cursor = self.connection.cursor()
         cursor.execute(
-            f"DELETE FROM {self.table} WHERE reservation_id= " + str(reservation_id)
+            f"DELETE FROM {self.table} WHERE reservation_id="
+            + str(reservation_id)
         )
 
         self.connection.commit()
@@ -60,11 +60,15 @@ class ReservationRepository:
     def find_by_id(self, reservation_id: str):
         cursor = self.connection.cursor(dictionary=True)
         cursor.execute(
-            f"SELECT * FROM {self.table} WHERE reservation_id=" + str(reservation_id)
+            f"SELECT * FROM {self.table} WHERE reservation_id="
+            + str(reservation_id)
         )
 
         reservation = cursor.fetchone()
         cursor.close()
+
+        if reservation is None:
+            return None
 
         return self.generate_reservation_factory(reservation)
 
@@ -95,5 +99,6 @@ class ReservationRepository:
                 reservation.reservation_id,
             ),
         )
+
         self.connection.commit()
         cursor.close()

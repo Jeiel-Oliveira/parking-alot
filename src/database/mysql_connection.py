@@ -1,6 +1,7 @@
 from src.database.db_connection import DbConnection
 import mysql.connector
 
+
 def get_database_connection():
     connection = MySqlConnection()
     connection.connect()
@@ -19,7 +20,7 @@ class MySqlConnection(DbConnection):
                 host="mysql-parking",
                 database="parking_alot",
                 user="parking",
-                password="parking"
+                password="parking",
             )
 
     def disconnect(self):
